@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 
 import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
 import { useState } from "react";
 
 export interface Pagination {
@@ -23,16 +24,25 @@ export interface Pagination {
 }
 
 export interface DataTablePaginationProps {
+  pIndex;
+  pSize;
   pageCount: number;
   onPaginationChange: (pagination: Pagination) => any;
 }
 
 export function DataTablePagination({
+  pIndex,
+  pSize,
   pageCount,
   onPaginationChange,
 }: DataTablePaginationProps) {
-  const [pageSize, setPageSize] = useState(5);
-  const [pageIndex, setPageIndex] = useState(0);
+  const [pageSize, setPageSize] = useState(pSize);
+  const [pageIndex, setPageIndex] = useState(pIndex);
+
+  useEffect(() => {
+    setPageIndex(pIndex);
+    setPageSize(pSize);
+  }, [pIndex, pSize]);
 
   function canPreviousPage() {
     return pageIndex > 0;

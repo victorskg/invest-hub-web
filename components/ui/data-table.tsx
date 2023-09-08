@@ -28,6 +28,12 @@ export interface ColumnModel<TData> {
   cell: (data: TData) => any;
 }
 
+export interface DataTableState {
+  pageIndex: number;
+  pageSize: number;
+  searchTerm: string;
+}
+
 export function DataTable<TData>({
   error,
   isLoading,

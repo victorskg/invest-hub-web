@@ -1,5 +1,6 @@
 "use client";
 
+import { DataTable, DataTableState } from "@/components/ui/data-table";
 import {
   DataTablePagination,
   Pagination,
@@ -7,7 +8,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import CreateUpdateDialog from "./create-update-dialog.tsx";
-import { DataTable } from "@/components/ui/data-table";
+import { Input } from "@/components/ui/input";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { columns } from "./columns";
 import { useState } from "react";
@@ -27,18 +28,43 @@ export default function Portfolio() {
     </span>
   );
 
-  const [pageIndex, setPageIndex] = useState(0);
-  const [pageSize, setPageSize] = useState(5);
+  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
   const [isDialogOpen, setDialogOpen] = useState(false);
-  const { data, error, isLoading } = useWalletPaginated(pageIndex, pageSize);
+  const [tableState, setTableState] = useState<DataTableState>({
+    pageIndex: 0,
+    pageSize: 5,
+  });
+  const { data, error, isLoading } = useWalletPaginated(
+    tableState.pageIndex,
+    tableState.pageSize,
+    tableState.searchTerm
+  );
 
   function openCreateWalletDialog() {
     setDialogOpen(!isDialogOpen);
   }
 
   function onPaginationChange(pagination: Pagination) {
-    setPageIndex(pagination.pageIndex);
-    setPageSize(pagination.pageSize);
+    setTableState({
+      ...tableState,
+      pageIndex: pagination.pageIndex,
+      pageSize: pagination.pageSize,
+    });
+  }
+
+  function handleSearchChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const newSearchTerm = event.target.value.trim();
+    event.preventDefault();
+
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+
+    const newTimeoutId = setTimeout(() => {
+      setTableState({ ...tableState, pageIndex: 0, searchTerm: newSearchTerm });
+    }, 1000);
+
+    setTimeoutId(newTimeoutId);
   }
 
   return (
@@ -50,7 +76,13 @@ export default function Portfolio() {
             Gerencie suas carteiras de investimento.
           </p>
         </div>
-        <div className="ml-auto mr-4">
+        <div className="flex flex-row gap-2 ml-auto mr-4">
+          <Input
+            type="search"
+            placeholder="Pesquise pela descrição..."
+            className="md:w-[100px] lg:w-[300px]"
+            onChange={handleSearchChange}
+          />
           <Button onClick={openCreateWalletDialog}>
             <PlusCircledIcon className="mr-2 h-4 w-4" />
             Nova Carteira
@@ -65,6 +97,8 @@ export default function Portfolio() {
         emptyDataContent={emptyDataContent}
       ></DataTable>
       <DataTablePagination
+        pIndex={tableState.pageIndex}
+        pSize={tableState.pageSize}
         pageCount={data?.pageCount || 0}
         onPaginationChange={onPaginationChange}
       />
