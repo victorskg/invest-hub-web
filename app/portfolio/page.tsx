@@ -34,7 +34,7 @@ export default function Portfolio() {
     pageIndex: 0,
     pageSize: 5,
   });
-  const { data, error, isLoading } = useWalletPaginated(
+  const { data, error, isLoading, mutate } = useWalletPaginated(
     tableState.pageIndex,
     tableState.pageSize,
     tableState.searchTerm
@@ -42,6 +42,10 @@ export default function Portfolio() {
 
   function openCreateWalletDialog() {
     setDialogOpen(!isDialogOpen);
+  }
+
+  function onCreateOrUpdate() {
+    mutate();
   }
 
   function onPaginationChange(pagination: Pagination) {
@@ -102,7 +106,11 @@ export default function Portfolio() {
         pageCount={data?.pageCount || 0}
         onPaginationChange={onPaginationChange}
       />
-      <CreateUpdateDialog open={isDialogOpen} onOpenChange={setDialogOpen} />
+      <CreateUpdateDialog
+        open={isDialogOpen}
+        onOpenChange={setDialogOpen}
+        createdOrUpdatedEvent={onCreateOrUpdate}
+      />
     </div>
   );
 }

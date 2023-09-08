@@ -1,13 +1,12 @@
 import "./globals.css";
-import type { Metadata } from "next";
 
-import { cn } from "@/lib/utils";
-import { Inter } from "next/font/google";
-import { Toaster } from "@/components/ui/toaster";
-
-import NavBar from "@/components/layout/nav-bar";
 import Footer from "@/components/layout/footer";
+import { Inter } from "next/font/google";
+import type { Metadata } from "next";
+import NavBar from "@/components/layout/nav-bar";
 import ThemeProvider from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/toaster";
+import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,7 +31,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <NavBar />
           <main className="flex-grow">{children}</main>
-          <Toaster />
+          <Toaster duration={2000} />
           <Footer />
         </ThemeProvider>
       </body>

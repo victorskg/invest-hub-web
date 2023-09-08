@@ -38,11 +38,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 interface CreateUpdateDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  createdOrUpdatedEvent?: () => void;
 }
 
 export default function CreateUpdateDialog({
   open = false,
   onOpenChange,
+  createdOrUpdatedEvent,
 }: CreateUpdateDialogProps) {
   const { toast } = useToast();
   const [isSubmiting, setSubmiting] = useState(false);
@@ -77,6 +79,7 @@ export default function CreateUpdateDialog({
           title: "Tudo certo!",
           description: `A carteira '${result.description}' foi criada com sucesso.`,
         });
+        createdOrUpdatedEvent && createdOrUpdatedEvent();
       })
       .catch((err) => {
         toast({
@@ -166,7 +169,7 @@ export default function CreateUpdateDialog({
               />
             </div>
             <DialogFooter>
-              <Button type="submit">
+              <Button type="submit" disabled={isSubmiting}>
                 {isSubmiting && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
