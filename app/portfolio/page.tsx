@@ -7,10 +7,10 @@ import {
 } from "@/components/ui/data-table-pagination";
 
 import { Button } from "@/components/ui/button";
-import CreateUpdateDialog from "./create-update-dialog.tsx";
+import CreateUpdateDialog from "./components/create-update-dialog";
 import { Input } from "@/components/ui/input";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
-import { columns } from "./columns";
+import { columns } from "./components/columns-definition";
 import { useState } from "react";
 import { useWalletPaginated } from "@/lib/api/wallet";
 

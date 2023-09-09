@@ -29,6 +29,13 @@ function useWalletPaginated(
   });
 }
 
+function useWallet(walletId: string) {
+  return useSWR(`${baseUrl}/${walletId}`, fetcher, {
+    revalidateOnFocus: false,
+    errorRetryCount: 2,
+  });
+}
+
 function createWallet(wallet: CreateUpdateWallet) {
   return fetch(baseUrl, {
     method: "POST",
@@ -39,4 +46,4 @@ function createWallet(wallet: CreateUpdateWallet) {
   }).then((res) => res.json());
 }
 
-export { useWalletPaginated, createWallet };
+export { useWalletPaginated, useWallet, createWallet };
